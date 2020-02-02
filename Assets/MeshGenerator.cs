@@ -41,6 +41,7 @@ public class MeshGenerator : MonoBehaviour
         }
 
     }
+
     //void OnDrawGizmosSelected()
     //{
     //    int columns = 8;
@@ -141,7 +142,7 @@ public class MeshGenerator : MonoBehaviour
         
         for (int i = 0; ((i + rows) < (columns * rows)); i++)
         {
-            if ((i+1)%rows != 0)
+            if ((i+1) % rows != 0)
             {
                 //if ((i + rows) < (columns * rows))
                 //{
@@ -172,11 +173,11 @@ public class MeshGenerator : MonoBehaviour
         mesh.Clear();
 
         // fill vertices[] with stuff
-        int columns = 10;
-        int rows = 10;
-        int levels = 4;
-        float heightMod = 1.5f;
-        float squareSize = 4f;
+        int columns = 20;
+        int rows = 20;
+        int levels = 10;
+        float heightMod = 20f;
+        float squareSize = 10f;
 
         Vector3 perlinNoise;
         
