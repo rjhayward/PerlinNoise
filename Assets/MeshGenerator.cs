@@ -19,7 +19,9 @@ public class MeshGenerator : MonoBehaviour
         mesh.name = "Perlin";
         mesh.Clear();
 
-        meshGenerator.RenderPerlinSquares(0);
+        meshGenerator.RenderPerlinSquares( Random.Range(0.1f, 0.9f) );
+        //meshGenerator.RenderPerlin(Random.Range(0.1f, 0.9f));
+
 
         //GetComponent<MeshCollider>().sharedMesh = mesh;
     }
@@ -105,16 +107,16 @@ public class MeshGenerator : MonoBehaviour
     //    }
     //}
 
-    public void RenderPerlin()
+    public void RenderPerlin(float noiseVal)
     {
 
         // fill vertices[] with stuff
         int columns = 8;
         int rows = 8;
         int index = 0;
-        int levels = 4;
+        int levels = 40;
 
-        Vector3 perlinNoise = GetPointOnPerlinNoise(0.323465f, 0.323465f);
+        Vector3 perlinNoise = GetPointOnPerlinNoise(noiseVal, noiseVal);
 
         vertices = new Vector3[(columns * rows) +2];
 
@@ -123,7 +125,7 @@ public class MeshGenerator : MonoBehaviour
             for (int y = 0; y < rows; y++)
             {
 
-                perlinNoise = GetPointOnPerlinNoise(x + 0.323465f, y + 0.323465f);
+                perlinNoise = GetPointOnPerlinNoise(x + noiseVal, y + noiseVal);
 
                 perlinNoise = new Vector3(Mathf.RoundToInt(perlinNoise.x * levels), Mathf.RoundToInt(perlinNoise.y * levels), Mathf.RoundToInt(perlinNoise.z * levels));
                 perlinNoise.y *= 1.5f;
@@ -170,14 +172,16 @@ public class MeshGenerator : MonoBehaviour
 
     public void RenderPerlinSquares(float noiseVal)
     {
+
+        
         mesh.Clear();
 
         // fill vertices[] with stuff
-        int columns = 20;
-        int rows = 20;
-        int levels = 10;
-        float heightMod = 20f;
-        float squareSize = 10f;
+        int columns = 30;
+        int rows = 30;
+        int levels = 100;
+        float heightMod = 70f;
+        float squareSize = 200f;
 
         Vector3 perlinNoise;
         
@@ -189,40 +193,62 @@ public class MeshGenerator : MonoBehaviour
         {
             for (int y = 0; y < rows; y++)
             {
-                //if (index <= rows * columns)
-                //{
+
+                if (x < 2)
+                {
+                    if (x % 2 == 0)//&&(x % 2 != 0))
+                    {
+                       
+                        vertices[index] = new Vector3(x * squareSize, 0f, y * squareSize);
+
+                        
+                        vertices[index + 1] = new Vector3(x * squareSize, 0f, y * squareSize + squareSize);
+
+
+                        vertices[index + rows * 2] = new Vector3(x * squareSize + squareSize, 0f, y * squareSize);
+
+
+                        vertices[index + rows * 2 + 1] = new Vector3(x * squareSize + squareSize, 0f, y * squareSize + squareSize);
+                    }
+                }
+                else
+                {
+
+                    //if (index <= rows * columns)
+                    //{
                     //if ((index-2 % (2*columns) != 0) && (index-4 % (2 * columns) != 0) && (index-6 % (2 * columns) != 0))
                     //{
-                        if (x % 2 == 0)//&&(x % 2 != 0))
-                        {
-                            perlinNoise = GetPointOnPerlinNoise(x + noiseVal, y*2 + noiseVal);  
-                            perlinNoise = new Vector3(Mathf.RoundToInt(perlinNoise.x * levels), Mathf.RoundToInt(perlinNoise.y * levels), Mathf.RoundToInt(perlinNoise.z * levels));
-                            perlinNoise.y *= heightMod;
-                            //Debug.Log(index + ": " + perlinNoise);
-                            vertices[index] = perlinNoise;
+                    if (x % 2 == 0)//&&(x % 2 != 0))
+                    {
+                        perlinNoise = GetPointOnPerlinNoise(x + noiseVal, y * 2 + noiseVal);
+                        perlinNoise = new Vector3(Mathf.RoundToInt(perlinNoise.x * levels), Mathf.RoundToInt(perlinNoise.y * levels), Mathf.RoundToInt(perlinNoise.z * levels));
+                        perlinNoise.y *= heightMod;
+                        //Debug.Log(index + ": " + perlinNoise);
+                        vertices[index] = perlinNoise;
 
-                            perlinNoise = GetPointOnPerlinNoise(x + noiseVal, y * 2 + noiseVal);  
-                            perlinNoise = new Vector3(Mathf.RoundToInt(perlinNoise.x * levels), Mathf.RoundToInt(perlinNoise.y * levels), Mathf.RoundToInt(perlinNoise.z * levels));
-                            perlinNoise.y *= heightMod;
-                            perlinNoise.z += squareSize;
-                            //Debug.Log(index + 1 + ": " + perlinNoise);
-                            vertices[index + 1] = perlinNoise;
+                        perlinNoise = GetPointOnPerlinNoise(x + noiseVal, y * 2 + noiseVal);
+                        perlinNoise = new Vector3(Mathf.RoundToInt(perlinNoise.x * levels), Mathf.RoundToInt(perlinNoise.y * levels), Mathf.RoundToInt(perlinNoise.z * levels));
+                        perlinNoise.y *= heightMod;
+                        perlinNoise.z += squareSize;
+                        //Debug.Log(index + 1 + ": " + perlinNoise);
+                        vertices[index + 1] = perlinNoise;
 
-                            perlinNoise = GetPointOnPerlinNoise(x + noiseVal, y * 2 + noiseVal);
-                            perlinNoise = new Vector3(Mathf.RoundToInt(perlinNoise.x * levels), Mathf.RoundToInt(perlinNoise.y * levels), Mathf.RoundToInt(perlinNoise.z * levels));
-                            perlinNoise.y *= heightMod;
-                            perlinNoise.x += squareSize;
-                            //Debug.Log(index + rows * 2 + ": " + perlinNoise);
-                            vertices[index + rows * 2] = perlinNoise;
+                        perlinNoise = GetPointOnPerlinNoise(x + noiseVal, y * 2 + noiseVal);
+                        perlinNoise = new Vector3(Mathf.RoundToInt(perlinNoise.x * levels), Mathf.RoundToInt(perlinNoise.y * levels), Mathf.RoundToInt(perlinNoise.z * levels));
+                        perlinNoise.y *= heightMod;
+                        perlinNoise.x += squareSize;
+                        //Debug.Log(index + rows * 2 + ": " + perlinNoise);
+                        vertices[index + rows * 2] = perlinNoise;
 
-                            perlinNoise = GetPointOnPerlinNoise(x + noiseVal, y * 2 + noiseVal);
-                            perlinNoise = new Vector3(Mathf.RoundToInt(perlinNoise.x * levels), Mathf.RoundToInt(perlinNoise.y * levels), Mathf.RoundToInt(perlinNoise.z * levels));
-                            perlinNoise.y *= heightMod;
-                            perlinNoise.x += squareSize;
-                            perlinNoise.z += squareSize;
-                            //Debug.Log(index + rows * 2 + 1 + ": " + perlinNoise);
-                            vertices[index + rows * 2 + 1] = perlinNoise;
-                        }
+                        perlinNoise = GetPointOnPerlinNoise(x + noiseVal, y * 2 + noiseVal);
+                        perlinNoise = new Vector3(Mathf.RoundToInt(perlinNoise.x * levels), Mathf.RoundToInt(perlinNoise.y * levels), Mathf.RoundToInt(perlinNoise.z * levels));
+                        perlinNoise.y *= heightMod;
+                        perlinNoise.x += squareSize;
+                        perlinNoise.z += squareSize;
+                        //Debug.Log(index + rows * 2 + 1 + ": " + perlinNoise);
+                        vertices[index + rows * 2 + 1] = perlinNoise;
+                    }
+                }
                     //}
                 //}
                 index += 2;
